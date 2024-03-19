@@ -1,0 +1,57 @@
+syntax = "proto3";
+package user_v1;
+import "google/protobuf/timestamp.proto";
+option go_package = "Online-Text-Editor/server/pkg/user_v1;user_v1";
+
+service UserV1{
+  rpc Create(CreateRequest) returns (CreateResponse);
+  rpc Delete(DeleteRequest) returns (DeleteResponse);
+  rpc Get(GetRequest) returns (GetResponse);
+  rpc Test(TestRequest) returns (TestResponse);
+}
+
+message TestRequest {
+}
+message TestResponse {
+  string str = 1;
+}
+
+
+message User {
+  string id = 1;
+  string name = 2;
+  string password = 3;
+}
+
+message UserInfo {
+  string name = 1;
+}
+
+message UserAuth {
+  string name = 1;
+  string password = 2;
+}
+
+message CreateRequest {
+  UserAuth userAuth = 1;
+}
+
+message CreateResponse {
+  string id = 1;
+}
+
+message DeleteRequest {
+  string id = 1;
+}
+
+message DeleteResponse {
+  string id = 1;
+}
+
+message GetRequest {
+  string id = 1;
+}
+
+message GetResponse {
+  UserInfo userInfo = 1;
+}
