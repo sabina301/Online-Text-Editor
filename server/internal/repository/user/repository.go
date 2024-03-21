@@ -5,12 +5,6 @@ import (
 	"sync"
 )
 
-type UserRepository interface {
-	Create(name string, passwordHash string) (int, error)
-	Get()
-	Delete()
-}
-
 type userRepository struct {
 	db *sqlx.DB
 	m  sync.RWMutex

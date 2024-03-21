@@ -1,10 +1,10 @@
 package workspace
 
-type WorkspaceService interface {
+type Repository interface {
 	Create()
 	Get()
-	AddUser()
 	Delete()
+	AddUser()
 }
 
 type workspaceService struct {

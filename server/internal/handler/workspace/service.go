@@ -1,13 +1,16 @@
 package workspace
 
-import (
-	"Online-Text-Editor/server/internal/service/workspace"
-)
-
-type Implementation struct {
-	workspaceService workspace.WorkspaceService
+type Service interface {
+	Create()
+	Get()
+	AddUser()
+	Delete()
 }
 
-func NewImplementation(workspaceService workspace.WorkspaceService) *Implementation {
+type Implementation struct {
+	workspaceService Service
+}
+
+func NewImplementation(workspaceService Service) *Implementation {
 	return &Implementation{workspaceService: workspaceService}
 }

@@ -2,7 +2,6 @@ package user
 
 import (
 	"Online-Text-Editor/server/internal/model"
-	"Online-Text-Editor/server/internal/repository/user"
 )
 
 type UserService interface {
@@ -11,11 +10,17 @@ type UserService interface {
 	Delete() int
 }
 
-type userService struct {
-	userRepository user.UserRepository
+type Repository interface {
+	Create(name string, passwordHash string) (int, error)
+	Get()
+	Delete()
 }
 
-func NewUserService(repo user.UserRepository) *userService {
+type userService struct {
+	userRepository Repository
+}
+
+func NewUserService(repo Repository) *userService {
 	return &userService{
 		userRepository: repo,
 	}
