@@ -3,7 +3,6 @@ package user
 import (
 	"Online-Text-Editor/server/internal/model"
 	"crypto/sha256"
-	"errors"
 	"fmt"
 )
 
@@ -15,7 +14,7 @@ func (u *userService) Create(user *model.UserAuth) (string, error) {
 	if err != nil {
 		return "-1", err
 	}
-	return string(rune(id)), errors.New("lol")
+	return string(rune(id)), nil
 }
 
 func generateHashPassword(password string) string {

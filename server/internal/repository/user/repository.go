@@ -2,6 +2,7 @@ package user
 
 import (
 	"github.com/jmoiron/sqlx"
+	"log"
 	"sync"
 )
 
@@ -15,6 +16,7 @@ func NewUserRepository(db *sqlx.DB) *userRepository {
 }
 
 func (r *userRepository) Create(name string, passwordHash string) (int, error) {
+	log.Println("REP")
 	r.m.Lock()
 	defer r.m.Unlock()
 

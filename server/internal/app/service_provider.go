@@ -40,19 +40,19 @@ func (s *serviceProvider) UserRepository(db *sqlx.DB) userService.Repository {
 	return s.userRepository
 }
 
-func (s *serviceProvider) UserService() userImpl.Service {
+func (s *serviceProvider) UserService(db *sqlx.DB) userImpl.Service {
 	if s.userService == nil {
 		s.userService = userService.NewUserService(
-			s.userRepository,
+			s.UserRepository(db),
 		)
 	}
 
 	return s.userService
 }
 
-func (s *serviceProvider) UserImpl() *userImpl.Implementation {
+func (s *serviceProvider) UserImpl(db *sqlx.DB) *userImpl.Implementation {
 	if s.userImpl == nil {
-		s.userImpl = userImpl.NewImplementation(s.UserService())
+		s.userImpl = userImpl.NewImplementation(s.UserService(db))
 	}
 
 	return s.userImpl

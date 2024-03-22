@@ -1,9 +1,11 @@
 package app
 
 import (
+	"Online-Text-Editor/server/internal/repository"
 	desc "Online-Text-Editor/server/pkg/user_v1"
 	"context"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
@@ -12,6 +14,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 	"sync"
 )
 
@@ -22,35 +25,48 @@ type App struct {
 
 func NewApp(ctx context.Context) (*App, error) {
 	app := &App{}
-	err := app.initDependencies(ctx)
+	err := app.initConfiguration()
+	if err != nil {
+		log.Fatal(err)
+	}
+	db := app.initDB()
+	err = app.initDependencies(ctx, db)
 	if err != nil {
 		return nil, err
 	}
 	return app, nil
 }
 
-func (app *App) initDependencies(ctx context.Context) error {
-	err := app.initConfiguration()
-	if err != nil {
-		log.Fatal(err)
+func (app *App) initDB() *sqlx.DB {
+	dbConf := repository.DatabaseConfig{
+		Host:     viper.GetString("db.host"),
+		Port:     viper.GetString("db.port"),
+		User:     viper.GetString("db.user"),
+		Password: os.Getenv("db_password"),
+		DBName:   viper.GetString("db.database"),
+		SSLMode:  viper.GetString("db.sslmode"),
 	}
-
-	err = godotenv.Load("server/.env")
+	db, err := repository.NewDatabase(dbConf)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error: unable to connect to database")
 	}
+	return db.GetDB()
+}
 
+func (app *App) initDependencies(ctx context.Context, db *sqlx.DB) error {
 	app.initServiceProvider()
-
-	err = app.initGrpcServer()
+	err := app.initGrpcServer(db)
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	return nil
 }
 
 func (app *App) initConfiguration() error {
+	err := godotenv.Load("server/.env")
+	if err != nil {
+		log.Fatal(err)
+	}
 	viper.AddConfigPath("server/internal/configuration")
 	viper.SetConfigName("configuration")
 	return viper.ReadInConfig()
@@ -60,10 +76,10 @@ func (app *App) initServiceProvider() {
 	app.serviceProvider = newServiceProvider()
 }
 
-func (app *App) initGrpcServer() error {
+func (app *App) initGrpcServer(db *sqlx.DB) error {
 	app.grpcServer = grpc.NewServer(grpc.Creds(insecure.NewCredentials()))
 	reflection.Register(app.grpcServer)
-	desc.RegisterUserV1Server(app.grpcServer, app.serviceProvider.UserImpl())
+	desc.RegisterUserV1Server(app.grpcServer, app.serviceProvider.UserImpl(db))
 	return nil
 }
 
