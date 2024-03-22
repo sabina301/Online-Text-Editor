@@ -12,5 +12,5 @@ func main() {
 	if err != nil {
 		log.Fatal("App cant start")
 	}
-	err = a.Run()
+	a.Run(ctx)
 }

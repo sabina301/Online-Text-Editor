@@ -3,6 +3,7 @@ package app
 import (
 	desc "Online-Text-Editor/server/pkg/user_v1"
 	"context"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
@@ -10,6 +11,8 @@ import (
 	"google.golang.org/grpc/reflection"
 	"log"
 	"net"
+	"net/http"
+	"sync"
 )
 
 type App struct {
@@ -64,15 +67,45 @@ func (app *App) initGrpcServer() error {
 	return nil
 }
 
-func (app *App) Run() error {
+func (app *App) Run(ctx context.Context) {
+	wg := &sync.WaitGroup{}
+	wg.Add(2)
 
+	go func() {
+		defer wg.Done()
+		err := startGrpcServer(app)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+		err := startHttpServer(ctx, app)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	wg.Wait()
+}
+
+func startGrpcServer(app *App) error {
 	listener, err := net.Listen("tcp", app.serviceProvider.GRPCConfig().Address())
 	if err != nil {
 		return err
 	}
-	err = app.grpcServer.Serve(listener)
+	return app.grpcServer.Serve(listener)
+}
+
+func startHttpServer(ctx context.Context, app *App) error {
+	mux := runtime.NewServeMux()
+	opts := []grpc.DialOption{
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	}
+	err := desc.RegisterUserV1HandlerFromEndpoint(ctx, mux, app.serviceProvider.GRPCConfig().Address(), opts)
 	if err != nil {
 		return err
 	}
-	return nil
+	return http.ListenAndServe("localhost:8080", mux)
 }

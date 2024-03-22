@@ -11,8 +11,8 @@ import (
 
 type serviceProvider struct {
 	grpcConfiguration configuration.GrpcConfiguration
-	userRepository    userRepo.UserRepository
-	userService       userService.UserService
+	userRepository    userService.Repository
+	userService       userImpl.Service
 	userImpl          *userImpl.Implementation
 }
 
@@ -32,7 +32,7 @@ func (s *serviceProvider) GRPCConfig() configuration.GrpcConfiguration {
 	return s.grpcConfiguration
 }
 
-func (s *serviceProvider) UserRepository(db *sqlx.DB) userRepo.UserRepository {
+func (s *serviceProvider) UserRepository(db *sqlx.DB) userService.Repository {
 	if s.userRepository == nil {
 		s.userRepository = userRepo.NewUserRepository(db)
 	}
@@ -40,7 +40,7 @@ func (s *serviceProvider) UserRepository(db *sqlx.DB) userRepo.UserRepository {
 	return s.userRepository
 }
 
-func (s *serviceProvider) UserService() userService.UserService {
+func (s *serviceProvider) UserService() userImpl.Service {
 	if s.userService == nil {
 		s.userService = userService.NewUserService(
 			s.userRepository,

@@ -23,7 +23,6 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserV1Client interface {
 	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
-	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
 	Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
 	Test(ctx context.Context, in *TestRequest, opts ...grpc.CallOption) (*TestResponse, error)
 }
@@ -39,15 +38,6 @@ func NewUserV1Client(cc grpc.ClientConnInterface) UserV1Client {
 func (c *userV1Client) Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error) {
 	out := new(CreateResponse)
 	err := c.cc.Invoke(ctx, "/user_v1.UserV1/Create", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userV1Client) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
-	out := new(DeleteResponse)
-	err := c.cc.Invoke(ctx, "/user_v1.UserV1/Delete", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +67,6 @@ func (c *userV1Client) Test(ctx context.Context, in *TestRequest, opts ...grpc.C
 // for forward compatibility
 type UserV1Server interface {
 	Create(context.Context, *CreateRequest) (*CreateResponse, error)
-	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
 	Get(context.Context, *GetRequest) (*GetResponse, error)
 	Test(context.Context, *TestRequest) (*TestResponse, error)
 	mustEmbedUnimplementedUserV1Server()
@@ -89,9 +78,6 @@ type UnimplementedUserV1Server struct {
 
 func (UnimplementedUserV1Server) Create(context.Context, *CreateRequest) (*CreateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
-}
-func (UnimplementedUserV1Server) Delete(context.Context, *DeleteRequest) (*DeleteResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedUserV1Server) Get(context.Context, *GetRequest) (*GetResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
@@ -126,24 +112,6 @@ func _UserV1_Create_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserV1Server).Create(ctx, req.(*CreateRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserV1_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserV1Server).Delete(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/user_v1.UserV1/Delete",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserV1Server).Delete(ctx, req.(*DeleteRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -194,10 +162,6 @@ var UserV1_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Create",
 			Handler:    _UserV1_Create_Handler,
-		},
-		{
-			MethodName: "Delete",
-			Handler:    _UserV1_Delete_Handler,
 		},
 		{
 			MethodName: "Get",

@@ -8,7 +8,6 @@ import (
 type Service interface {
 	Create(*model.UserAuth) (string, error)
 	Get() model.UserInfo
-	Delete() int
 }
 
 type Implementation struct {

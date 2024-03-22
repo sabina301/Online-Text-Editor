@@ -1,21 +1,35 @@
 syntax = "proto3";
 package user_v1;
 import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+
 option go_package = "Online-Text-Editor/server/pkg/user_v1;user_v1";
 
 service UserV1{
-  rpc Create(CreateRequest) returns (CreateResponse);
-  rpc Delete(DeleteRequest) returns (DeleteResponse);
-  rpc Get(GetRequest) returns (GetResponse);
-  rpc Test(TestRequest) returns (TestResponse);
+  rpc Create(CreateRequest) returns (CreateResponse) {
+    option (google.api.http) = {
+      post: "/user/v1"
+      body: "*"
+    };
+  };
+  rpc Get(GetRequest) returns (GetResponse) {
+    option (google.api.http) = {
+      get: "/user/v1"
+    };
+  };
+  rpc Test(TestRequest) returns (TestResponse){
+    option (google.api.http) = {
+      get: "/test"
+    };
+  };
 }
 
 message TestRequest {
 }
+
 message TestResponse {
   string str = 1;
 }
-
 
 message User {
   string id = 1;
@@ -40,13 +54,6 @@ message CreateResponse {
   string id = 1;
 }
 
-message DeleteRequest {
-  string id = 1;
-}
-
-message DeleteResponse {
-  string id = 1;
-}
 
 message GetRequest {
   string id = 1;
