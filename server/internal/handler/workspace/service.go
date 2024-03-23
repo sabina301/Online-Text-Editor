@@ -1,13 +1,18 @@
 package workspace
 
+import (
+	"Online-Text-Editor/server/internal/model"
+	desc "Online-Text-Editor/server/pkg/workspace_v1"
+)
+
 type Service interface {
-	Create()
-	Get()
+	Create(ww *model.WorkspaceWithoutId) (string, error)
+	Get() (int, error)
 	AddUser()
-	Delete()
 }
 
 type Implementation struct {
+	desc.UnimplementedWorkspaceV1Server
 	workspaceService Service
 }
 

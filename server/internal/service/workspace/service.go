@@ -3,25 +3,15 @@ package workspace
 type Repository interface {
 	Create()
 	Get()
-	Delete()
 	AddUser()
 }
 
 type workspaceService struct {
+	workspaceRepository Repository
 }
 
-func (w *workspaceService) Create() {
-
-}
-
-func (w *workspaceService) Get() {
-
-}
-
-func (w *workspaceService) AddUser() {
-
-}
-
-func (w *workspaceService) Delete() {
-
+func NewWorkspaceService(repo Repository) *workspaceService {
+	return &workspaceService{
+		workspaceRepository: repo,
+	}
 }

@@ -3,6 +3,7 @@ package app
 import (
 	"Online-Text-Editor/server/internal/repository"
 	desc "Online-Text-Editor/server/pkg/user_v1"
+	descW "Online-Text-Editor/server/pkg/workspace_v1"
 	"context"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/jmoiron/sqlx"
@@ -80,6 +81,7 @@ func (app *App) initGrpcServer(db *sqlx.DB) error {
 	app.grpcServer = grpc.NewServer(grpc.Creds(insecure.NewCredentials()))
 	reflection.Register(app.grpcServer)
 	desc.RegisterUserV1Server(app.grpcServer, app.serviceProvider.UserImpl(db))
+	descW.RegisterWorkspaceV1Server(app.grpcServer, app.serviceProvider.WorkspaceImpl(db))
 	return nil
 }
 

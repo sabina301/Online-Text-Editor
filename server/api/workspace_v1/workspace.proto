@@ -1,0 +1,62 @@
+syntax = "proto3";
+package user_v1;
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+
+option go_package = "Online-Text-Editor/server/pkg/workspace_v1;workspace_v1";
+
+service WorkspaceV1{
+  rpc CreateWorkspace(CreateWorkspaceRequest) returns (CreateWorkspaceResponse) {
+    option (google.api.http) = {
+      post: "/workspace/create"
+      body: "*"
+    };
+  };
+  rpc AddUser(AddUserRequest) returns (AddUserResponse) {
+    option (google.api.http) = {
+      post: "/workspace/add"
+      body: "*"
+    };
+  };
+  rpc GetWorkspace(GetWorkspaceRequest) returns (GetWorkspaceResponse) {
+    option (google.api.http) = {
+      get: "/workspace/get/{id}"
+    };
+  };
+}
+
+
+message Workspace {
+  string id = 1;
+  string name = 2;
+}
+
+
+message WorkspaceWithoutId {
+  string name = 1;
+}
+
+message CreateWorkspaceRequest {
+  WorkspaceWithoutId workspaceWithoutId = 1;
+}
+
+message CreateWorkspaceResponse {
+  string id = 1;
+}
+
+message AddUserRequest {
+  string id = 1;
+}
+
+message AddUserResponse {
+  string message = 1;
+}
+
+message GetWorkspaceRequest {
+  string id = 1;
+}
+
+message GetWorkspaceResponse {
+  string id = 1;
+  string name = 2;
+}
