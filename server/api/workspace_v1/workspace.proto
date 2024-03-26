@@ -14,7 +14,7 @@ service WorkspaceV1{
   };
   rpc AddUser(AddUserRequest) returns (AddUserResponse) {
     option (google.api.http) = {
-      post: "/workspace/add"
+      post: "/workspace/add/{workspaceId}"
       body: "*"
     };
   };
@@ -44,7 +44,8 @@ message CreateWorkspaceResponse {
 }
 
 message AddUserRequest {
-  string id = 1;
+  string workspaceId = 1;
+  string userId = 2;
 }
 
 message AddUserResponse {

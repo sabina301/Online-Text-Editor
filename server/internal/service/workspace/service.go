@@ -3,7 +3,7 @@ package workspace
 type Repository interface {
 	Create(w string, userId int) (int, error)
 	Get()
-	AddUser()
+	AddUser(workspaceId int, userId int) error
 }
 
 type workspaceService struct {

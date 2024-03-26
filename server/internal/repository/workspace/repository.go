@@ -54,6 +54,26 @@ func (r *workspaceRepository) Delete() {
 
 }
 
-func (r *workspaceRepository) AddUser() {
+func (r *workspaceRepository) AddUser(workspaceId int, userId int) error {
+	r.m.Lock()
+	defer r.m.Unlock()
 
+	tx, err := r.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	query := "INSERT INTO user_workspace (user_id, workspace_id) VALUES ($1, $2)"
+	_, err = tx.Exec(query, userId, workspaceId)
+	if err != nil {
+		return err
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

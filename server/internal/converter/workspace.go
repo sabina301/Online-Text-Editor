@@ -10,3 +10,9 @@ func ToWorkspaceWithoutId(info *desc.WorkspaceWithoutId) *model.WorkspaceWithout
 		Name: info.Name,
 	}
 }
+
+func ToUserId(info *desc.AddUserRequest) *model.UserId {
+	return &model.UserId{
+		Id: info.UserId,
+	}
+}

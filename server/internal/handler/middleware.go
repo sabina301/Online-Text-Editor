@@ -36,7 +36,7 @@ func UserIdentity(ctx context.Context, req any, info *grpc.UnaryServerInfo, hand
 	}
 	method := strings.Split(info.FullMethod, "/")[2]
 	authHeader, ok := md["authorization"]
-	if method == "CreateWorkspace" {
+	if method == "CreateWorkspace" || method == "AddUser" {
 		tokenString := strings.TrimPrefix(authHeader[0], "Bearer ")
 		userId, err := ParseToken(tokenString)
 		if err != nil {

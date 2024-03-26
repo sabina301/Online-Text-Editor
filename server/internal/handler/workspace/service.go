@@ -8,7 +8,7 @@ import (
 type Service interface {
 	Create(ww *model.WorkspaceWithoutId, userId int) (string, error)
 	Get() (int, error)
-	AddUser()
+	AddUser(workspaceId string, userId string) error
 }
 
 type Implementation struct {
