@@ -6,7 +6,7 @@ import (
 )
 
 type Service interface {
-	Create(ww *model.WorkspaceWithoutId) (string, error)
+	Create(ww *model.WorkspaceWithoutId, userId int) (string, error)
 	Get() (int, error)
 	AddUser()
 }

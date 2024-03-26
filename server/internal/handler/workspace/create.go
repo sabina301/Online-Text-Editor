@@ -7,7 +7,8 @@ import (
 )
 
 func (i *Implementation) CreateWorkspace(ctx context.Context, req *desc.CreateWorkspaceRequest) (*desc.CreateWorkspaceResponse, error) {
-	workspaceId, err := i.workspaceService.Create(converter.ToWorkspaceWithoutId(req.WorkspaceWithoutId))
+	userId := ctx.Value("userId")
+	workspaceId, err := i.workspaceService.Create(converter.ToWorkspaceWithoutId(req.WorkspaceWithoutId), userId.(int))
 	if err != nil {
 		return nil, err
 	}

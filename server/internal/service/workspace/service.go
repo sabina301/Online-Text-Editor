@@ -1,7 +1,7 @@
 package workspace
 
 type Repository interface {
-	Create()
+	Create(w string, userId int) (int, error)
 	Get()
 	AddUser()
 }
