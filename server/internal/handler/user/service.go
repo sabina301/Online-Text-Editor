@@ -7,7 +7,8 @@ import (
 
 type Service interface {
 	Create(*model.UserAuth) (string, error)
-	Get() model.UserInfo
+	Get(id string) (*model.UserInfo, error)
+	Login(*model.UserAuth) (string, int, error)
 }
 
 type Implementation struct {
@@ -15,6 +16,8 @@ type Implementation struct {
 	userService Service
 }
 
-func NewImplementation(userService Service) *Implementation {
-	return &Implementation{userService: userService}
+func NewImplementation(service Service) *Implementation {
+	return &Implementation{
+		userService: service,
+	}
 }

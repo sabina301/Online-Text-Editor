@@ -11,3 +11,9 @@ func ToUserAuthFromDesc(info *desc.UserAuth) *model.UserAuth {
 		Password: info.Password,
 	}
 }
+
+func ToUserInfoDesc(name string) *desc.UserInfo {
+	return &desc.UserInfo{
+		Name: name,
+	}
+}

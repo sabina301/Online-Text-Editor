@@ -31,7 +31,6 @@ message Workspace {
   string name = 2;
 }
 
-
 message WorkspaceWithoutId {
   string name = 1;
 }

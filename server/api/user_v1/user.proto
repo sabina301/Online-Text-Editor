@@ -12,6 +12,12 @@ service UserV1{
       body: "*"
     };
   };
+  rpc Login(CreateRequest) returns (LoginResponse) {
+    option (google.api.http) = {
+      post: "/user/login"
+      body: "*"
+    };
+  };
   rpc Get(GetRequest) returns (GetResponse) {
     option (google.api.http) = {
       get: "/user/get/{id}"
@@ -63,4 +69,9 @@ message GetRequest {
 
 message GetResponse {
   UserInfo userInfo = 1;
+}
+
+message LoginResponse {
+  string id = 1;
+  string token = 2;
 }

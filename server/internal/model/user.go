@@ -14,3 +14,7 @@ type UserAuth struct {
 	Name     string
 	Password string
 }
+
+type UserId struct {
+	Id string
+}

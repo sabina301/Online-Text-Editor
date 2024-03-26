@@ -6,7 +6,13 @@ CREATE TABLE users (
 
 CREATE TABLE workspace (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    user_id INT NOT NULL,
-    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id)
+    name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE user_workspace (
+    user_id INT,
+    workspace_id INT,
+    PRIMARY KEY (user_id, workspace_id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (workspace_id) REFERENCES workspace(id)
 )

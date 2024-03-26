@@ -9,7 +9,7 @@ import (
 const salt = "lolkekcheburek"
 
 func (u *userService) Create(user *model.UserAuth) (string, error) {
-	hashPassword := generateHashPassword(user.Password)
+	hashPassword := GeneratePasswordHash(user.Password)
 	id, err := u.userRepository.Create(user.Name, hashPassword)
 	if err != nil {
 		return "-1", err
@@ -17,7 +17,7 @@ func (u *userService) Create(user *model.UserAuth) (string, error) {
 	return string(rune(id)), nil
 }
 
-func generateHashPassword(password string) string {
+func GeneratePasswordHash(password string) string {
 	hash := sha256.New()
 	hash.Write([]byte(password))
 
